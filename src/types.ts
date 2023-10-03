@@ -1,8 +1,14 @@
+export type Prettify<T> = {
+  [K in keyof T]: T[K]
+} & {}
+
+export type WhisperMode = 'transcriptions' | 'translations'
+
 export type UseWhisperConfig = {
-  apiKey?: string
+  api: '/api/whisper' | (string & {})
   autoStart?: boolean
   autoTranscribe?: boolean
-  mode?: 'transcriptions' | 'translations'
+  mode?: WhisperMode
   nonStop?: boolean
   removeSilence?: boolean
   stopTimeout?: number
@@ -10,7 +16,11 @@ export type UseWhisperConfig = {
   timeSlice?: number
   whisperConfig?: WhisperApiConfig
   onDataAvailable?: (blob: Blob) => void
-  onTranscribe?: (blob: Blob) => Promise<UseWhisperTranscript>
+  // onTranscribe?: (blob: Blob) => Promise<UseWhisperTranscript>
+  onStartRecording?: () => void
+  onStopRecording?: () => void
+  onPauseRecording?: () => void
+  debug?: boolean
 }
 
 export type UseWhisperTimeout = {
@@ -35,7 +45,7 @@ export type UseWhisperReturn = {
 export type UseWhisperHook = (config?: UseWhisperConfig) => UseWhisperReturn
 
 export type WhisperApiConfig = {
-  model?: 'whisper-1' | string
+  model?: 'whisper-1' | Record<never, never>
   prompt?: string
   response_format?: 'json' | 'text' | 'srt' | 'verbose_json' | 'vtt'
   temperature?: number
